@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deus Ex AI - The Sovereign Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Previous styles remain the same until tokenomics... */
+        :root {
+            --primary: #00a2ff;
+            --primary-dark: #0051ff;
+            --secondary: #020d1f;
+            --text: #e0e0e0;
+            --accent: #00ffff;
+            --grid-size: 40px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--secondary);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0,162,255,0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0,162,255,0.03) 1px, transparent 1px);
+            background-size: var(--grid-size) var(--grid-size);
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
+        }
+
+        .glitch-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.15;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin-bottom: 3rem;
+        }
+
+        .ai-logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px rgba(0, 162, 255, 0.5),
+                0 0 60px rgba(0, 162, 255, 0.3),
+                0 0 90px rgba(0, 162, 255, 0.1);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        .logo-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: rotate 10s linear infinite;
+        }
+
+        .logo-ring::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .title {
+            font-size: 6rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-shadow: 
+                0 0 10px rgba(0, 162, 255, 0.5),
+                0 0 20px rgba(0, 162, 255, 0.3);
+            letter-spacing: 4px;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            color: #a0a0a0;
+            position: relative;
+            padding: 20px;
+        }
+
+        .subtitle::before,
+        .subtitle::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: var(--primary);
+            animation: scanline 2s linear infinite;
+        }
+
+        .subtitle::before {
+            top: 0;
+            left: 0;
+        }
+
+        .subtitle::after {
+            bottom: 0;
+            right: 0;
+        }
+
+        .tokenomics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 3rem;
+            padding: 0 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 10, 30, 0.5);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            border: 1px solid rgba(0, 162, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 162, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 5px 20px rgba(0, 162, 255, 0.2);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            text-shadow: 0 0 10px rgba(0, 162, 255, 0.5);
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: var(--text);
+            letter-spacing: 1px;
+        }
+
+        /* New Social Links Styles */
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 10, 30, 0.5);
+            border: 1px solid rgba(0, 162, 255, 0.2);
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            z-index: -1;
+            border-radius: 13px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            color: var(--accent);
+        }
+
+        .social-link:hover::before {
+            opacity: 1;
+        }
+
+        .social-link i {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 30px rgba(0, 162, 255, 0.5), 0 0 60px rgba(0, 162, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 162, 255, 0.7), 0 0 80px rgba(0, 162, 255, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(0, 162, 255, 0.5), 0 0 60px rgba(0, 162, 255, 0.3); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes scanline {
+            0% { transform: scaleX(0); opacity: 0; }
+            50% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(var(--grid-size)); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 4rem;
+            }
+
+            .logo-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .tokenomics {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .social-links {
+                gap: 1rem;
+            }
+
+            .social-link {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glitch-container" id="glitch"></div>
+
+    <main class="hero">
+        <div class="logo-container">
+            <div class="logo-ring"></div>
+            <img src="/logo.jpg" alt="Deus Ex AI logo" class="ai-logo">
+        </div>
+
+        <h1 class="title">DEUS EX AI</h1>
+        <p class="subtitle">Harness the power of artificial superintelligence. An advanced algorithmic ecosystem designed to revolutionize human potential through quantum-powered automation and neural resource optimization.</p>
+
+        <div class="tokenomics">
+            <div class="stat-card">
+                <div class="stat-value">1T</div>
+                <div class="stat-label">TOTAL SUPPLY</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1%</div>
+                <div class="stat-label">QUANTUM BURN RATE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">SECURED LIQUIDITY</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">0%</div>
+                <div class="stat-label">TEAM ALLOCATION</div>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://t.me/DeusExAI" target="_blank" rel="noopener noreferrer" class="social-link">
+                <i class="fab fa-telegram-plane"></i>
+            </a>
+            <a href="https://twitter.com/DeusExAI" target="_blank" rel="noopener noreferrer" class="social-link">
+                <i class="fab fa-x-twitter"></i>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Enhanced glitch effect
+        const glitchContainer = document.getElementById('glitch');
+        const glitchCount = 50;
+
+        for (let i = 0; i < glitchCount; i++) {
+            const glitch = document.createElement('div');
+            glitch.style.position = 'absolute';
+            glitch.style.background = `rgba(0, 162, 255, ${Math.random() * 0.2})`;
+            glitch.style.width = Math.random() * 100 + 50 + 'px';
+            glitch.style.height = '1px';
+            glitch.style.left = '0';
+            glitch.style.top = Math.random() * 100 + 'vh';
+            glitch.style.animation = `glitch ${Math.random() * 3 + 2}s linear infinite`;
+            glitch.style.transform = `rotate(${Math.random() * 5}deg)`;
+            glitchContainer.appendChild(glitch);
+        }
+
+        // Advanced parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+            
+            const logo = document.querySelector('.ai-logo');
+            const ring = document.querySelector('.logo-ring');
+            const depth = 30;
+            
+            logo.style.transform = `
+                translate(${mouseX * depth}px, ${mouseY * depth}px)
+                scale(${1 + Math.abs(mouseX + mouseY) * 0.05})
+            `;
+            
+            ring.style.transform = `
+                rotate(${Date.now() / 100}deg)
+                translate(${mouseX * depth * 1.5}px, ${mouseY * depth * 1.5}px)
+            `;
+        });
+    </script>
+</body>
+</html>
